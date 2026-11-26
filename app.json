@@ -1,0 +1,90 @@
+{
+  "slug": "drayver-zaxira",
+  "exe_name": "DrayverZaxira",
+  "version": "1.0.0",
+  "accent": "#e67700",
+  "folder": "Drayver zaxiralovchi",
+  "name": {
+    "uz": "Drayver zaxiralovchi",
+    "ru": "Резервное копирование драйверов",
+    "en": "Driver Backup"
+  },
+  "description": {
+    "uz": "Windows'ni qayta o'rnatishdan oldin uchinchi tomon drayverlarini sinflar bo'yicha papkalarga eksport qiladi, manifest va ZIP arxiv yaratadi, keyin ularni bir bosishda qayta o'rnatadi.",
+    "ru": "Перед переустановкой Windows экспортирует сторонние драйверы по папкам классов, создаёт манифест и ZIP-архив, а затем восстанавливает их одним нажатием.",
+    "en": "Before reinstalling Windows, exports third-party drivers into class folders with a manifest and ZIP archive, then reinstalls them in one click."
+  },
+  "features": {
+    "uz": [
+      "Uchinchi tomon drayver paketlari ro'yxati (pnputil), qaysi qurilmada ishlatilishi (WMI)",
+      "Ishlab chiqaruvchi, sinf, versiya, sana; Microsoft drayverlarini yashirish va qidiruv",
+      "Tanlanganlarni sinflar bo'yicha papkalarga eksport (pnputil /export-driver)",
+      "drivers_manifest.json: kompyuter, sana va har bir drayver ma'lumoti",
+      "ZIP arxiv yaratish",
+      "Tiklash: zaxira papkasidan pnputil /add-driver /subdirs /install",
+      "Buyruqlarni oldindan ko'rish va .bat fayl sifatida saqlash",
+      "Administrator huquqini tekshirish va qayta ishga tushirish",
+      "O'zbek, rus, ingliz tillari; yorug' va qorong'i mavzu"
+    ],
+    "ru": [
+      "Список сторонних пакетов драйверов (pnputil) и устройств, которые их используют (WMI)",
+      "Поставщик, класс, версия, дата; скрытие драйверов Microsoft и поиск",
+      "Экспорт выбранных по папкам классов (pnputil /export-driver)",
+      "drivers_manifest.json: компьютер, дата и данные каждого драйвера",
+      "Создание ZIP-архива",
+      "Восстановление из папки: pnputil /add-driver /subdirs /install",
+      "Предпросмотр команд и сохранение в .bat",
+      "Проверка прав администратора и перезапуск",
+      "Узбекский, русский, английский; светлая и тёмная тема"
+    ],
+    "en": [
+      "Third-party driver packages (pnputil) and the devices that use them (WMI)",
+      "Provider, class, version, date; hide Microsoft drivers, search",
+      "Export selected drivers into class folders (pnputil /export-driver)",
+      "drivers_manifest.json with computer, date and per-driver details",
+      "ZIP archive creation",
+      "Restore from a backup folder: pnputil /add-driver /subdirs /install",
+      "Preview commands and save them as a .bat file",
+      "Administrator rights check and restart",
+      "Uzbek, Russian and English interface; light and dark themes"
+    ]
+  },
+  "category": "Kompyuter servisi",
+  "min_os": "Windows 10 (1809+) / Windows 11, x64",
+  "build": {
+    "mode": "onefile",
+    "hidden_imports": [
+      "wmi",
+      "pythoncom",
+      "win32com"
+    ]
+  },
+  "font": "Segoe UI",
+  "topics": [
+    "drivers",
+    "driver-backup",
+    "pnputil",
+    "windows-reinstall",
+    "pc-technician"
+  ],
+  "palette": {
+    "light": {
+      "bg": "#f1f3f5",
+      "surface": "#ffffff",
+      "surface2": "#f8f9fa",
+      "border": "#dee2e6",
+      "text": "#212529",
+      "muted": "#6c757d",
+      "hover": "#e9ecef"
+    },
+    "dark": {
+      "bg": "#141517",
+      "surface": "#1c1d21",
+      "surface2": "#24262b",
+      "border": "#33363d",
+      "text": "#e9ecef",
+      "muted": "#9ca3ab",
+      "hover": "#2a2d33"
+    }
+  }
+}

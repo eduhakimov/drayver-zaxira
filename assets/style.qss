@@ -1,0 +1,21 @@
+QFrame#ToolStrip { background: {surface}; border-bottom: 1px solid {border}; }
+QTabBar#ModeTabs::tab { background: transparent; color: {muted}; padding: 9px 16px 10px 12px; border: none;
+    border-bottom: 2px solid transparent; margin-right: 4px; }
+QTabBar#ModeTabs::tab:selected { color: {text}; border-bottom: 2px solid {accent}; font-weight: 600; }
+QTabBar#ModeTabs::tab:hover:!selected { color: {text}; }
+QPushButton#ToolButton { background: transparent; border: 1px solid transparent; padding: 5px 10px; color: {text}; }
+QPushButton#ToolButton:hover { background: {hover}; border: 1px solid {border}; }
+QProgressBar#JobBar { border-radius: 0; background: transparent; }
+QProgressBar#JobBar::chunk { border-radius: 0; }
+QFrame#SidePanel { background: {surface}; border-left: 1px solid {border}; }
+QFrame#Sep { background: {border}; }
+QLabel#PanelTitle { font-size: 10.5pt; font-weight: 600; }
+QLabel#Warn { color: #c25e00; }
+QLabel#AdminChip { color: #2b8a3e; border: 1px solid #2b8a3e; border-radius: 2px; padding: 2px 8px; font-size: 9pt; }
+QLabel#UserChip { color: #c25e00; border: 1px solid #e8a15b; border-radius: 2px; padding: 2px 8px; font-size: 9pt; }
+QPushButton { border-radius: 3px; }
+QLineEdit, QComboBox, QSpinBox, QPlainTextEdit { border-radius: 2px; }
+QTableView, QTableWidget { border-radius: 2px; }
+QTableWidget::item { padding-left: 4px; }
+QHeaderView::section { font-weight: 600; padding: 6px; }
+QPlainTextEdit#Mono { font-family: Consolas, "Cascadia Mono", monospace; font-size: 9pt; }
