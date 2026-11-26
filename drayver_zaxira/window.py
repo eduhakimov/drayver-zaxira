@@ -4,7 +4,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-from PySide6.QtCore import QObject, Qt, Signal
+from PySide6.QtCore import QObject, Qt, QTimer, Signal
 from PySide6.QtGui import QColor, QGuiApplication, QPixmap
 from PySide6.QtWidgets import (QAbstractItemView, QCheckBox, QComboBox, QDialog, QFileDialog, QFormLayout, QFrame,
                                QHBoxLayout, QHeaderView, QLabel, QLineEdit, QPlainTextEdit, QProgressBar,
@@ -412,7 +412,11 @@ class RestorePage(QWidget):
         side.lay.addWidget(self.go)
         h.addWidget(side)
 
-        self.folder.changed.connect(self.load)
+        self._timer = QTimer(self)
+        self._timer.setSingleShot(True)
+        self._timer.setInterval(700)
+        self._timer.timeout.connect(lambda: self.load())
+        self.folder.changed.connect(lambda _t: self._timer.start())
         self.table.itemChanged.connect(lambda it: self._upd())
         self.cmd_btn.clicked.connect(self._show_cmds)
         self.go.clicked.connect(self._restore)
@@ -646,6 +650,14 @@ class MainWindow(BaseMainWindow):
         self.job.signals.error.connect(lambda e: error(self, e))
         self.job.signals.finished.connect(self._job_end)
         run_worker(self.job)
+
+    def closeEvent(self, e):
+        if self.job is not None:
+            self.job.cancel()
+        super().closeEvent(e)
+        self.hide()
+        from PySide6.QtCore import QThreadPool
+        QThreadPool.globalInstance().waitForDone(15000)
 
     def _job_end(self):
         self.job = None

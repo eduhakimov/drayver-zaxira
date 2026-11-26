@@ -205,7 +205,7 @@ def read_manifest(folder: str) -> Optional[dict]:
         return None
 
 
-def scan_backup(folder: str) -> List[dict]:
+def scan_backup(folder: str, max_depth: int = 5, limit: int = 2000) -> List[dict]:
     """Zaxira papkasidagi drayverlar: manifest bo'lsa undan, bo'lmasa .inf fayllar bo'yicha."""
     m = read_manifest(folder)
     if m:
@@ -216,12 +216,17 @@ def scan_backup(folder: str) -> List[dict]:
             out.append(e)
         return out
     out = []
-    seen = set()
-    for inf in sorted(Path(folder).rglob("*.inf")):
-        d = str(inf.parent)
-        if d in seen:
+    base = os.path.abspath(folder).rstrip("\\/").count(os.sep)
+    for d, dirs, files in os.walk(folder):
+        if os.path.abspath(d).rstrip("\\/").count(os.sep) - base >= max_depth:
+            dirs[:] = []
+        dirs.sort(key=str.lower)
+        infs = sorted(f for f in files if f.lower().endswith(".inf"))
+        if not infs:
             continue
-        seen.add(d)
+        if len(out) >= limit:
+            break
+        inf = Path(d) / infs[0]
         rel = os.path.relpath(d, folder).replace("\\", "/")
         out.append({"published": "", "original": inf.name, "provider": "", "cls": rel.split("/")[0] if "/" in rel else "",
                     "version": "", "date": "", "folder": rel, "devices": [], "exists": True})
