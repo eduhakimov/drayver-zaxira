@@ -28,7 +28,7 @@ STRINGS = {
     "col_folder": S("Papka", "Папка", "Folder"),
     "col_present": S("Fayllar", "Файлы", "Files"),
     "present_yes": S("bor", "есть", "present"),
-    "present_no": S("topilmadi", "не найдены", "missing"),
+    "present_no": S("yo'q", "нет", "missing"),
     "select_all": S("Hammasini belgilash", "Отметить все", "Select all"),
     "select_none": S("Belgilarni olish", "Снять отметки", "Select none"),
     "details": S("Tanlangan drayver", "Выбранный драйвер", "Selected driver"),

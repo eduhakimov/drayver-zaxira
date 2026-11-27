@@ -108,7 +108,7 @@ class CommandsDialog(QDialog):
     def _bat(self):
         p, _ = QFileDialog.getSaveFileName(self, tr("save_bat"), str(documents_dir() / "drayverlar.bat"), "Batch (*.bat)")
         if p:
-            Path(p).write_text(drv.to_bat(self.cmds, self.mkdirs), encoding="utf-8")
+            Path(p).write_text(drv.to_bat(self.cmds, self.mkdirs), encoding="utf-8", newline="")
 
 
 class SidePanel(QFrame):
@@ -199,8 +199,9 @@ class BackupPage(QWidget):
         side.title(tr("target"))
         self.target = PathPicker("dir")
         default = str(Path("D:/Drayverlar") if DEMO else documents_dir() / "Drayverlar")
-        self.target.set_path(win.settings.get("target", "") if not DEMO and win.settings.get("target") else
-                             os.path.join(default, os.environ.get("COMPUTERNAME", "PC") if not DEMO else "LENOVO-5-14IIL05"))
+        # Sozlamada ota papka saqlanadi, kompyuter nomi har safar qo'shiladi
+        base = win.settings.get("target", "") if not DEMO and win.settings.get("target") else default
+        self.target.set_path(os.path.join(base, os.environ.get("COMPUTERNAME", "PC") if not DEMO else "LENOVO-5-14IIL05"))
         side.lay.addWidget(self.target)
         self.by_class = QCheckBox(tr("by_class"))
         self.by_class.setChecked(True)
@@ -337,6 +338,8 @@ class BackupPage(QWidget):
         if not dest:
             warn(self, tr("no_target"))
             return
+        dest = drv.resolve_target(dest)
+        self.target.set_path(dest)
         if not is_admin():
             if ask(self, tr("admin_required")):
                 do_relaunch(self)
@@ -344,14 +347,14 @@ class BackupPage(QWidget):
         if not ask(self, tr("confirm_backup", n=len(sel), dest=dest)):
             return
         if not DEMO:
-            self.win.settings.set("target", os.path.dirname(dest.rstrip("\\/")) or dest)
+            self.win.settings.set("target", os.path.dirname(dest))
         by_class, make_zip = self.by_class.isChecked(), self.zip.isChecked()
         windows = self.win.windows_caption()
 
         def job(progress):
             res = drv.run_export(sel, dest, by_class, progress, on_line=self.win.bridge.line.emit, windows=windows)
             if make_zip:
-                res["zip"] = drv.zip_folder(dest, dest.rstrip("\\/") + ".zip")
+                res["zip"] = drv.zip_folder(dest, drv.zip_path_for(dest))
             return res
         self.win.run_job(job, self._done)
 

@@ -171,6 +171,21 @@ def export_plan(drivers: List[Driver], dest: str, by_class: bool = True) -> List
     return plan
 
 
+def resolve_target(path: str, computer: str = "") -> str:
+    """Zaxira papkasi. Disk ildizi (masalan E: diskning o'zi) tanlansa, ichida alohida papka ochiladi: aks holda ZIP butun
+    fleshkani o'z ichiga olardi va "E:.zip" kabi noto'g'ri nom chiqardi."""
+    p = os.path.normpath(path.strip())
+    drive, rest = os.path.splitdrive(p)
+    if rest in ("", "\\", "/", "."):
+        p = os.path.join(drive + os.sep, "Drayverlar", safe_name(computer or os.environ.get("COMPUTERNAME", "PC")))
+    return p
+
+
+def zip_path_for(dest: str) -> str:
+    d = os.path.normpath(dest)
+    return os.path.join(os.path.dirname(d), os.path.basename(d) + ".zip")
+
+
 def dism_export_all(dest: str) -> List[str]:
     """Barcha uchinchi tomon drayverlarini bitta buyruq bilan eksport qilish (muqobil usul)."""
     return ["dism.exe", "/online", "/export-driver", f"/destination:{dest}"]
@@ -252,7 +267,8 @@ def to_bat(cmds: List[List[str]], mkdirs: List[str] = ()) -> str:
     lines = ["@echo off", "chcp 65001 >nul", "rem Drayver zaxiralovchi: administrator sifatida ishga tushiring", ""]
     for d in mkdirs:
         lines.append(f'if not exist "{d}" mkdir "{d}"')
-    lines += [cmdline(c) for c in cmds]
+    # .bat ichida "%" o'zgaruvchi belgisi: yo'lda bo'lsa ikkilantiriladi
+    lines += [cmdline(c).replace("%", "%%") for c in cmds]
     lines += ["", "pause"]
     return "\r\n".join(lines) + "\r\n"
 
@@ -293,7 +309,14 @@ def run_export(drivers: List[Driver], dest: str, by_class=True, progress=None, r
         os.makedirs(folder, exist_ok=True)
     res = execute([a for _, a in plan], progress, runner, on_line)
     ok = [d for d, (_, code, _) in zip(drivers, res) if code in PNPUTIL_OK]
-    write_manifest(manifest_dict(drivers, dest, by_class, windows=windows), dest)
+    # Eksport bo'lmagan drayverlar manifestga yozilmaydi, bo'sh papkalari olib tashlanadi
+    for (folder, _), d in zip(plan, drivers):
+        if d not in ok:
+            try:
+                os.rmdir(folder)
+            except OSError:
+                pass
+    write_manifest(manifest_dict(ok, dest, by_class, windows=windows), dest)
     return {"results": res, "ok": len(ok), "failed": len(res) - len(ok)}
 
 
